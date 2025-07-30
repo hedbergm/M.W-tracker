@@ -1,0 +1,20 @@
+{
+  "name": "workouttracker",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["workout", "tracking", "fitness", "node.js", "express"],
+  "author": "",
+  "license": "ISC",
+  "description": "En webapplikasjon for å tracke kondisjon, styrke og lagidrett treninger",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "path": "^0.12.7",
+    "sqlite3": "^5.1.7"
+  }
+}
