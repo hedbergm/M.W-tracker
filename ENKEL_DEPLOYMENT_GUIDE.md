@@ -1,7 +1,9 @@
 # 🚀 SUPER ENKEL DEPLOYMENT GUIDE
 
 ## 📍 ZIP-fil lokasjon:
-`C:\Users\mhe\OneDrive - Holship A S\Skrivebord\Server Filer\Server Filer\workout-tracker-source.zip`
+`C:\Users\mhe\OneDrive - Holship A S\Skrivebord\Server Filer\Server Filer\workout-tracker-source-v2.zip`
+
+**🆕 OPPDATERT:** Ny versjon med timer-funksjonalitet (HH:MM:SS)!
 
 ---
 

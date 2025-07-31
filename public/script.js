@@ -120,7 +120,7 @@ async function handleKondisjonSubmit(e) {
     const formData = {
         dato: document.getElementById('kondisjon-dato').value,
         km: parseFloat(document.getElementById('kondisjon-km').value),
-        tid_minutter: parseInt(document.getElementById('kondisjon-tid').value),
+        tid_minutter: parseTimeInput(document.getElementById('kondisjon-tid').value),
         snittpuls: document.getElementById('kondisjon-snittpuls').value || null,
         hoydemeter: document.getElementById('kondisjon-hoydemeter').value || null,
         stigningsprosent: document.getElementById('kondisjon-stigning').value || null,
@@ -361,7 +361,7 @@ async function handleStyrkeOktSubmit(e) {
                 sett: parseInt(sett),
                 reps: parseInt(reps),
                 vekt: parseFloat(vekt),
-                tid_minutter: tid ? parseInt(tid) : null,
+                tid_minutter: tid ? parseTimeInput(tid) : null,
                 kommentar: kommentar || null
             });
         }
@@ -574,7 +574,7 @@ function displayLagidrettHistorie(treninger) {
             <button class="delete-btn" onclick="deleteLagidrett(${trening.id})" title="Slett trening">×</button>
             <div class="date">${formatDate(trening.dato)}</div>
             <div class="details">
-                <strong>${trening.sport}</strong> - ${trening.tid_minutter} minutter
+                <strong>${trening.sport}</strong> - ${formatTime(trening.tid_minutter)}
                 ${trening.snittpuls ? `<br>Snittpuls: ${trening.snittpuls} bpm` : ''}
                 ${trening.makspuls ? `<br>Makspuls: ${trening.makspuls} bpm` : ''}
                 ${trening.kalorier ? `<br>Kalorier: ${trening.kalorier}` : ''}
@@ -590,7 +590,7 @@ async function handleLagidrettSubmit(e) {
     const formData = {
         sport: document.getElementById('lagidrett-sport').value,
         dato: document.getElementById('lagidrett-dato').value,
-        tid_minutter: parseInt(document.getElementById('lagidrett-tid').value),
+        tid_minutter: parseTimeInput(document.getElementById('lagidrett-tid').value),
         snittpuls: document.getElementById('lagidrett-snittpuls').value || null,
         makspuls: document.getElementById('lagidrett-makspuls').value || null,
         kommentar: document.getElementById('lagidrett-kommentar').value || null
@@ -977,9 +977,48 @@ function formatDate(dateString) {
 }
 
 function formatTime(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return hours > 0 ? `${hours}t ${mins}m` : `${mins}m`;
+    if (!minutes || minutes <= 0) return '00:00';
+    
+    const totalMinutes = Math.floor(minutes);
+    const secs = Math.round((minutes - totalMinutes) * 60);
+    
+    if (totalMinutes >= 60) {
+        // Vis timer hvis 60 minutter eller mer
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+        return `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    } else {
+        // Vis bare minutter og sekunder
+        return `${totalMinutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+}
+
+function parseTimeInput(timeString) {
+    if (!timeString) return 0;
+    
+    // Hvis det er et tall, returner det som minutter
+    if (!isNaN(timeString)) {
+        return parseFloat(timeString);
+    }
+    
+    // Hvis det er HH:MM:SS eller MM:SS format
+    const timeParts = timeString.split(':');
+    let totalMinutes = 0;
+    
+    if (timeParts.length === 3) {
+        // HH:MM:SS format
+        const hours = parseInt(timeParts[0]) || 0;
+        const mins = parseInt(timeParts[1]) || 0;
+        const secs = parseInt(timeParts[2]) || 0;
+        totalMinutes = (hours * 60) + mins + (secs / 60);
+    } else if (timeParts.length === 2) {
+        // MM:SS format
+        const mins = parseInt(timeParts[0]) || 0;
+        const secs = parseInt(timeParts[1]) || 0;
+        totalMinutes = mins + (secs / 60);
+    }
+    
+    return totalMinutes;
 }
 
 function calculatePace(km, minutes) {
